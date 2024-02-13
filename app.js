@@ -1,13 +1,13 @@
 // Importa i moduli necessari
-const express = require('express');
-const path = require('path');
-const mongoose = require('mongoose');
-const ejsMate = require('ejs-mate');
-const methodOverride = require('method-override');
-const Campground = require('./models/campground');
-const asyncWrapper = require('./utils/asyncWrapper');
-const ExpressError = require('./utils/ExpressError');
-const checkSchema = require('./utils/checkSchema');
+import express from 'express';
+import path from 'path';
+import mongoose from 'mongoose';
+import ejsMate from 'ejs-mate';
+import methodOverride from 'method-override';
+import Campground from './models/campground';
+import asyncWrapper from './utils/asyncWrapper';
+import ExpressError from './utils/ExpressError';
+import checkSchema from './utils/checkSchema';
 // Connette al database MongoDB
 mongoose.connect('mongodb://localhost:27017/yelp-camp-fake');
 
