@@ -1,5 +1,5 @@
-const joi = require('joi');
-const ExpressError = require('./ExpressError');
+import Joi from 'joi';
+import ExpressError from './ExpressError.js';
 function checkSchema(req, res, next) {
 	if (!req.body) throw new ExpressError('dati campeggio non validi', 400);
 	const result = schemaValidation.validate(req.body);
@@ -12,4 +12,4 @@ function checkSchema(req, res, next) {
 	}
 }
 
-module.exports = checkSchema;
+export default checkSchema;

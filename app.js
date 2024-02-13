@@ -3,11 +3,12 @@ import express from 'express';
 import path from 'path';
 import mongoose from 'mongoose';
 import ejsMate from 'ejs-mate';
-import methodOverride from 'method-override';
-import Campground from './models/campground';
-import asyncWrapper from './utils/asyncWrapper';
-import ExpressError from './utils/ExpressError';
-import checkSchema from './utils/checkSchema';
+import Campground from './models/campground.js';
+import asyncWrapper from './utils/asyncWrapper.js';
+import ExpressError from './utils/ExpressError.js';
+import checkSchema from './utils/checkSchema.js';
+import methodMiddleware from './utils/methodMiddleware.js';
+
 // Connette al database MongoDB
 mongoose.connect('mongodb://localhost:27017/yelp-camp-fake');
 
@@ -22,11 +23,10 @@ const app = express();
 // Configurazione dell'app Express
 app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(process.cwd(), 'views'));
 
 // Middleware
 app.use(express.urlencoded({ extended: true }));
-app.use(methodOverride('_method'));
 
 // Route per la pagina iniziale
 app.get('/', (req, res) => {

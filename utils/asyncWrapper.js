@@ -1,7 +1,7 @@
-asyncWrapper = (fn) => {
+function asyncWrapper(fn) {
 	return (req, res, next) => {
 		fn(req, res, next).catch(next);
 	};
-};
+}
 
-module.exports = asyncWrapper;
+export default asyncWrapper;
