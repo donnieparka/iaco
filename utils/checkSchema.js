@@ -1,4 +1,4 @@
-import Joi from 'joi';
+import schemaValidation from './joiModels.js';
 import ExpressError from './ExpressError.js';
 function checkSchema(req, res, next) {
 	if (!req.body) throw new ExpressError('dati campeggio non validi', 400);

@@ -1,3 +1,5 @@
+import joi from 'joi';
+
 const schemaValidation = joi.object({
 	campground: joi
 		.object({
@@ -10,4 +12,4 @@ const schemaValidation = joi.object({
 		.required(),
 });
 
-module.exports = schemaValidation;
+export default schemaValidation;

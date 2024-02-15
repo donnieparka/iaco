@@ -8,6 +8,7 @@ import asyncWrapper from './utils/asyncWrapper.js';
 import ExpressError from './utils/ExpressError.js';
 import checkSchema from './utils/checkSchema.js';
 import methodMiddleware from './utils/methodMiddleware.js';
+import schemaValidation from './utils/joiModels.js';
 
 // Connette al database MongoDB
 mongoose.connect('mongodb://localhost:27017/yelp-camp-fake');
@@ -27,6 +28,7 @@ app.set('views', path.join(process.cwd(), 'views'));
 
 // Middleware
 app.use(express.urlencoded({ extended: true }));
+app.use(methodMiddleware);
 
 // Route per la pagina iniziale
 app.get('/', (req, res) => {
