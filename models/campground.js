@@ -14,5 +14,5 @@ const CampgroundSchema = new Schema({
 		},
 	],
 });
-
-export default CampgroundSchema;
+const Campground = mongoose.model('Campground', CampgroundSchema);
+export default Campground;
