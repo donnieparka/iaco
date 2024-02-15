@@ -102,6 +102,9 @@ app.delete(
 	}),
 );
 
+app.post('campgrounds/:id/reviews', (req, res) => {
+	res.send(req.body);
+});
 app.all('*', (req, res, next) => {
 	const err = new ExpressError('qua non c`è un cazzo', 404);
 	next(err);
