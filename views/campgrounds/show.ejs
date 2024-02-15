@@ -1,26 +1,48 @@
 <% layout('layouts/boilerplate')%>
 
 <div class="row">
-    <div class="col-6 offset-3">
-        <div class="card mb-3">
-            <img src="<%= campground.image%>" class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title"><%= campground.title%></h5>
-                <p class="card-text"><%= campground.description%></p>
-            </div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item text-muted"><%= campground.location%></li>
-                <li class="list-group-item">$<%= campground.price%>/night</li>
-            </ul>
-            <div class="card-body">
-                <a class="card-link btn btn-info" href="/campgrounds/<%=campground._id%>/edit">Edit</a>
-                <form class="d-inline" action="/campgrounds/<%=campground._id%>?_method=DELETE" method="POST">
-                    <button class="btn btn-danger">Delete</button>
-                </form>
-            </div>
-            <div class="card-footer text-muted">
-                2 days ago
-            </div>
-        </div>
-    </div>
+	<div class="col-6 offset-3">
+		<div class="card mb-3">
+			<img src="<%= campground.image%>" class="card-img-top" alt="..." />
+			<div class="card-body">
+				<h5 class="card-title"><%= campground.title%></h5>
+				<p class="card-text"><%= campground.description%></p>
+			</div>
+			<ul class="list-group list-group-flush">
+				<li class="list-group-item text-muted"><%= campground.location%></li>
+				<li class="list-group-item">$<%= campground.price%>/night</li>
+			</ul>
+			<div class="card-body">
+				<a
+					class="card-link btn btn-info"
+					href="/campgrounds/<%=campground._id%>/edit"
+					>Edit</a
+				>
+				<form
+					class="d-inline"
+					action="/campgrounds/<%=campground._id%>?_method=DELETE"
+					method="POST"
+				>
+					<button class="btn btn-danger">Delete</button>
+				</form>
+			</div>
+			<div class="card-footer text-muted">2 days ago</div>
+		</div>
+		<form name="review" action="/campgrounds/<%= campground._id %>" method="post">
+			<div class="mb-3">
+				<label for="review">review</label>
+                <!-- prettier-ignore -->
+				<textarea class="form-control" name="review[body]" id="body cols="10" rows="3"></textarea>
+                <label for="customRange1" class="form-label">Example range</label>
+                <input type="range" class="form-range" min="1" max="5" id="customRange1" oninput="updateValue(this.value)">
+				<span class="showRating">3</span>
+                <button class="btn btn-success">Submit</button>
+			</div>
+		</form>
+	</div>
 </div>
+<script>
+	function updateValue(rating) {
+		document.querySelector('.showRating').textContent = `${rating}`;
+	}
+</script>
