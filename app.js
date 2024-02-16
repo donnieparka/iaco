@@ -6,9 +6,12 @@ import ejsMate from 'ejs-mate';
 import Campground from './models/campground.js';
 import asyncWrapper from './utils/asyncWrapper.js';
 import ExpressError from './utils/ExpressError.js';
-import checkSchema from './utils/checkSchema.js';
+import { checkCampground, checkReview } from './utils/checkSchema.js';
 import methodMiddleware from './utils/methodMiddleware.js';
-import schemaValidation from './utils/joiModels.js';
+import {
+	campValidationSchema,
+	reviewValidationSchema,
+} from './utils/joiModels.js';
 import Review from './models/review.js';
 
 // Connette al database MongoDB
@@ -53,7 +56,7 @@ app.get('/campgrounds/new', (req, res) => {
 // Route per gestire l'aggiunta di un nuovo campeggio
 app.post(
 	'/campgrounds',
-	checkSchema,
+	checkCampground,
 	asyncWrapper(async (req, res) => {
 		const campground = new Campground(req.body.campground);
 		await campground.save();
@@ -83,7 +86,7 @@ app.get(
 // Route per gestire la modifica di un campeggio esistente
 app.put(
 	'/campgrounds/:id',
-	checkSchema,
+	checkCampground,
 	asyncWrapper(async (req, res) => {
 		const { id } = req.params;
 		const campground = await Campground.findByIdAndUpdate(id, {
@@ -94,6 +97,7 @@ app.put(
 );
 app.post(
 	'/campgrounds/:id/reviews',
+	checkReview,
 	asyncWrapper(async (req, res) => {
 		const camp = await Campground.findById(req.params.id);
 		const review = new Review(req.body.review);

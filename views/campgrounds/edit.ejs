@@ -78,10 +78,3 @@
 		<a href="/campgrounds/<%= campground._id%>">Back To Campground</a>
 	</div>
 </div>
-<script>
-	(() => {
-		const form = document.querySelector('.validate');
-		!form.checkValidity() ? event.stopPropagation() : null;
-		form.classList.add('was-validated');
-	})();
-</script>

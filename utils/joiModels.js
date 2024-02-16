@@ -1,6 +1,6 @@
 import joi from 'joi';
 
-const schemaValidation = joi.object({
+const campValidationSchema = joi.object({
 	campground: joi
 		.object({
 			title: joi.string().required(),
@@ -12,4 +12,13 @@ const schemaValidation = joi.object({
 		.required(),
 });
 
-export default schemaValidation;
+const reviewValidationSchema = joi.object({
+	review: joi
+		.object({
+			body: joi.string().required(),
+			rating: joi.number().required().min(1).max(5),
+		})
+		.required(),
+});
+
+export { campValidationSchema, reviewValidationSchema };
