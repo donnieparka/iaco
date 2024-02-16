@@ -9,6 +9,7 @@ import ExpressError from './utils/ExpressError.js';
 import checkSchema from './utils/checkSchema.js';
 import methodMiddleware from './utils/methodMiddleware.js';
 import schemaValidation from './utils/joiModels.js';
+import Review from './models/review.js';
 
 // Connette al database MongoDB
 mongoose.connect('mongodb://localhost:27017/yelp-camp-fake');
@@ -91,7 +92,17 @@ app.put(
 		res.redirect(`/campgrounds/${campground._id}`);
 	}),
 );
-
+app.post(
+	'/campgrounds/:id/reviews',
+	asyncWrapper(async (req, res) => {
+		const camp = await Campground.findById(req.params.id);
+		const review = new Review(req.body.review);
+		camp.reviews.push(review);
+		await camp.save();
+		await review.save();
+		res.redirect(`/campgrounds/${req.params.id}`);
+	}),
+);
 // Route per gestire l'eliminazione di un campeggio
 app.delete(
 	'/campgrounds/:id',
@@ -102,9 +113,6 @@ app.delete(
 	}),
 );
 
-app.post('campgrounds/:id/reviews', (req, res) => {
-	res.send(req.body);
-});
 app.all('*', (req, res, next) => {
 	const err = new ExpressError('qua non c`è un cazzo', 404);
 	next(err);
