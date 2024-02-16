@@ -69,7 +69,7 @@ app.get(
 	'/campgrounds/:id',
 	asyncWrapper(async (req, res) => {
 		const { id } = req.params;
-		const campground = await Campground.findById(id);
+		const campground = await Campground.findById(id).populate('reviews');
 		res.render('campgrounds/show', { campground }); // Renderizza la vista 'show' passando il campeggio trovato
 	}),
 );
@@ -107,6 +107,7 @@ app.post(
 		res.redirect(`/campgrounds/${req.params.id}`);
 	}),
 );
+
 // Route per gestire l'eliminazione di un campeggio
 app.delete(
 	'/campgrounds/:id',

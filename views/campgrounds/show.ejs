@@ -1,7 +1,7 @@
 <% layout('layouts/boilerplate')%>
 
 <div class="row">
-	<div class="col-6 offset-3">
+	<div class="col-6">
 		<div class="card mb-3">
 			<img src="<%= campground.image%>" class="card-img-top" alt="..." />
 			<div class="card-body">
@@ -28,6 +28,8 @@
 			</div>
 			<div class="card-footer text-muted">2 days ago</div>
 		</div>
+	</div>
+	<div class="col-6">
 		<form
 			class="validate"
 			name="review"
@@ -50,9 +52,18 @@
 					oninput="updateValue(this.value)"
 				/>
 				<span class="showRating">3</span>
+				<br />
 				<button class="btn btn-success">Submit</button>
 			</div>
 		</form>
+		<% for (const review of campground.reviews) { %>
+		<div class="card mb-3">
+			<div class="card-body">
+				<p class="card-text"><%= review.body %></p>
+				<h6 class="card-title">rating: <%= review.rating %>/5</h6>
+			</div>
+		</div>
+		<% } %>
 	</div>
 </div>
 <script>
