@@ -8,10 +8,6 @@ import asyncWrapper from './utils/asyncWrapper.js';
 import ExpressError from './utils/ExpressError.js';
 import { checkCampground, checkReview } from './utils/checkSchema.js';
 import methodMiddleware from './utils/methodMiddleware.js';
-import {
-	campValidationSchema,
-	reviewValidationSchema,
-} from './utils/joiModels.js';
 import Review from './models/review.js';
 
 // Connette al database MongoDB
@@ -104,6 +100,17 @@ app.post(
 		camp.reviews.push(review);
 		await camp.save();
 		await review.save();
+		res.redirect(`/campgrounds/${req.params.id}`);
+	}),
+);
+
+app.delete(
+	'/campgrounds/:id/reviews/:revid',
+	asyncWrapper(async (req, res) => {
+		await Campground.findByIdAndUpdate(req.params.id, {
+			$pull: { reviews: req.params.revid },
+		});
+		await Review.findByIdAndDelete(req.params.revid);
 		res.redirect(`/campgrounds/${req.params.id}`);
 	}),
 );
