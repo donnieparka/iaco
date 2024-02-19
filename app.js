@@ -9,7 +9,8 @@ import ExpressError from './utils/ExpressError.js';
 import { checkCampground, checkReview } from './utils/checkSchema.js';
 import methodMiddleware from './utils/methodMiddleware.js';
 import Review from './models/review.js';
-
+// import dei router
+import campgroundsRouter from './routes/campgrounds.js';
 // Connette al database MongoDB
 mongoose.connect('mongodb://localhost:27017/yelp-camp-fake');
 
@@ -35,95 +36,8 @@ app.get('/', (req, res) => {
 	res.render('home');
 });
 
-// Route per visualizzare tutti i campeggi
-app.get(
-	'/campgrounds',
-	asyncWrapper(async (req, res) => {
-		const campgrounds = await Campground.find({});
-		res.render('campgrounds/index', { campgrounds });
-	}),
-);
-
-// Route per mostrare il form per aggiungere un nuovo campeggio
-app.get('/campgrounds/new', (req, res) => {
-	res.render('campgrounds/new'); // Renderizza il form per aggiungere un nuovo campeggio
-});
-
-// Route per gestire l'aggiunta di un nuovo campeggio
-app.post(
-	'/campgrounds',
-	checkCampground,
-	asyncWrapper(async (req, res) => {
-		const campground = new Campground(req.body.campground);
-		await campground.save();
-		res.redirect(`/campgrounds/${campground._id}`);
-	}),
-);
-
-// Route per visualizzare i dettagli di un campeggio specifico
-app.get(
-	'/campgrounds/:id',
-	asyncWrapper(async (req, res) => {
-		const { id } = req.params;
-		const campground = await Campground.findById(id).populate('reviews');
-		res.render('campgrounds/show', { campground }); // Renderizza la vista 'show' passando il campeggio trovato
-	}),
-);
-
-// Route per visualizzare il form per modificare un campeggio esistente
-app.get(
-	'/campgrounds/:id/edit',
-	asyncWrapper(async (req, res) => {
-		const campground = await Campground.findById(req.params.id); // Trova il campeggio con l'ID specificato
-		res.render('campgrounds/edit', { campground }); // Renderizza il form di modifica passando il campeggio trovato
-	}),
-);
-
-// Route per gestire la modifica di un campeggio esistente
-app.put(
-	'/campgrounds/:id',
-	checkCampground,
-	asyncWrapper(async (req, res) => {
-		const { id } = req.params;
-		const campground = await Campground.findByIdAndUpdate(id, {
-			...req.body.campground,
-		});
-		res.redirect(`/campgrounds/${campground._id}`);
-	}),
-);
-app.post(
-	'/campgrounds/:id/reviews',
-	checkReview,
-	asyncWrapper(async (req, res) => {
-		const camp = await Campground.findById(req.params.id);
-		const review = new Review(req.body.review);
-		camp.reviews.push(review);
-		await camp.save();
-		await review.save();
-		res.redirect(`/campgrounds/${req.params.id}`);
-	}),
-);
-
-app.delete(
-	'/campgrounds/:id/reviews/:revid',
-	asyncWrapper(async (req, res) => {
-		await Campground.findByIdAndUpdate(req.params.id, {
-			$pull: { reviews: req.params.revid },
-		});
-		await Review.findByIdAndDelete(req.params.revid);
-		res.redirect(`/campgrounds/${req.params.id}`);
-	}),
-);
-
-// Route per gestire l'eliminazione di un campeggio
-app.delete(
-	'/campgrounds/:id',
-	asyncWrapper(async (req, res) => {
-		const { id } = req.params;
-		const deletedCamp = await Campground.findByIdAndDelete(id);
-		res.redirect('/campgrounds');
-	}),
-);
+// router per campgrounds
+app.use('/campgrounds', campgroundsRouter);
 
 app.all('*', (req, res, next) => {
 	const err = new ExpressError('qua non c`è un cazzo', 404);
