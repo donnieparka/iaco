@@ -3,12 +3,13 @@ import express from 'express';
 import path from 'path';
 import mongoose from 'mongoose';
 import ejsMate from 'ejs-mate';
-import Campground from './models/campground.js';
+import flash from 'connect-flash';
+import session from 'express-session';
+// utils
 import asyncWrapper from './utils/asyncWrapper.js';
 import ExpressError from './utils/ExpressError.js';
 import { checkCampground, checkReview } from './utils/checkSchema.js';
 import methodMiddleware from './utils/methodMiddleware.js';
-import Review from './models/review.js';
 // import dei router
 import campgroundsRouter from './routes/campgrounds.js';
 // Connette al database MongoDB
@@ -30,7 +31,14 @@ app.set('views', path.join(process.cwd(), 'views'));
 // Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(methodMiddleware);
-
+app.use(
+	session({
+		secret: 'dspoasdjfpaisj',
+		resave: false,
+		saveUninitialized: false,
+	}),
+);
+app.use(flash());
 // Route per la pagina iniziale
 app.get('/', (req, res) => {
 	res.render('home');
@@ -38,7 +46,7 @@ app.get('/', (req, res) => {
 
 // router per campgrounds
 app.use('/campgrounds', campgroundsRouter);
-
+app.use('/campgrounds/:id/reviews');
 app.all('*', (req, res, next) => {
 	const err = new ExpressError('qua non c`è un cazzo', 404);
 	next(err);

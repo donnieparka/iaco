@@ -1,6 +1,9 @@
 import express from 'express';
 import asyncWrapper from '../utils/asyncWrapper.js';
+// models
 import Campground from '../models/campground.js';
+import Review from '../models/review.js';
+// joi checkers
 import { checkCampground, checkReview } from '../utils/checkSchema.js';
 const campgroundsRouter = express.Router();
 
@@ -29,22 +32,26 @@ campgroundsRouter.post(
 	asyncWrapper(async (req, res) => {
 		const campground = new Campground(req.body.campground);
 		await campground.save();
+		req.flash('success', 'campgroud Added!!');
 		res.redirect(`/campgrounds/${campground._id}`);
 	}),
 );
 
 // Route per visualizzare i dettagli di un campeggio specifico
-app.get(
+campgroundsRouter.get(
 	'/:id',
 	asyncWrapper(async (req, res) => {
 		const { id } = req.params;
 		const campground = await Campground.findById(id).populate('reviews');
-		res.render('campgrounds/show', { campground }); // Renderizza la vista 'show' passando il campeggio trovato
+		res.render('campgrounds/show', {
+			campground,
+			messages: req.flash('success'),
+		}); // Renderizza la vista 'show' passando il campeggio trovato
 	}),
 );
 
 // Route per visualizzare il form per modificare un campeggio esistente
-app.get(
+campgroundsRouter.get(
 	'/:id/edit',
 	asyncWrapper(async (req, res) => {
 		const campground = await Campground.findById(req.params.id); // Trova il campeggio con l'ID specificato
@@ -53,7 +60,7 @@ app.get(
 );
 
 // Route per gestire la modifica di un campeggio esistente
-app.put(
+campgroundsRouter.put(
 	'/:id',
 	checkCampground,
 	asyncWrapper(async (req, res) => {
@@ -66,38 +73,12 @@ app.put(
 );
 
 // Route per gestire l'eliminazione di un campeggio
-app.delete(
+campgroundsRouter.delete(
 	'/:id',
 	asyncWrapper(async (req, res) => {
 		const { id } = req.params;
 		const deletedCamp = await Campground.findByIdAndDelete(id);
 		res.redirect('/campgrounds');
-	}),
-);
-
-// aggiunta review al campeggio
-app.post(
-	'/:id/reviews',
-	checkReview,
-	asyncWrapper(async (req, res) => {
-		const camp = await Campground.findById(req.params.id);
-		const review = new Review(req.body.review);
-		camp.reviews.push(review);
-		await camp.save();
-		await review.save();
-		res.redirect(`/campgrounds/${req.params.id}`);
-	}),
-);
-
-// eliminazione review
-app.delete(
-	'/:id/reviews/:revid',
-	asyncWrapper(async (req, res) => {
-		await Campground.findByIdAndUpdate(req.params.id, {
-			$pull: { reviews: req.params.revid },
-		});
-		await Review.findByIdAndDelete(req.params.revid);
-		res.redirect(`/campgrounds/${req.params.id}`);
 	}),
 );
 
