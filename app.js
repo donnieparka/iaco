@@ -12,6 +12,7 @@ import { checkCampground, checkReview } from './utils/checkSchema.js';
 import methodMiddleware from './utils/methodMiddleware.js';
 // import dei router
 import campgroundsRouter from './routes/campgrounds.js';
+import reviewsRouter from './routes/reviews.js';
 // Connette al database MongoDB
 mongoose.connect('mongodb://localhost:27017/yelp-camp-fake');
 
@@ -46,7 +47,7 @@ app.get('/', (req, res) => {
 
 // router per campgrounds
 app.use('/campgrounds', campgroundsRouter);
-app.use('/campgrounds/:id/reviews');
+app.use('/campgrounds/:id/reviews', reviewsRouter);
 app.all('*', (req, res, next) => {
 	const err = new ExpressError('qua non c`è un cazzo', 404);
 	next(err);

@@ -1,11 +1,11 @@
-import { Express } from 'express';
+import express from 'express';
 const reviewsRouter = express.Router();
 // models
 import Campground from '../models/campground.js';
 import Review from '../models/review.js';
 // utils
-import asyncWrapper from './utils/asyncWrapper.js';
-import { checkReview } from './utils/checkSchema.js';
+import asyncWrapper from '../utils/asyncWrapper.js';
+import { checkReview } from '../utils/checkSchema.js';
 
 // aggiunta review al campeggio
 reviewsRouter.post(
@@ -32,3 +32,5 @@ reviewsRouter.delete(
 		res.redirect(`/campgrounds/${req.params.id}`);
 	}),
 );
+
+export default reviewsRouter;
