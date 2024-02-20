@@ -32,6 +32,7 @@ app.set('views', path.join(process.cwd(), 'views'));
 // Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(methodMiddleware);
+app.use(express.static('public'));
 app.use(
 	session({
 		secret: 'dspoasdjfpaisj',
