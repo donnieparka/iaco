@@ -2,7 +2,6 @@ import express from 'express';
 import asyncWrapper from '../utils/asyncWrapper.js';
 // models
 import Campground from '../models/campground.js';
-import Review from '../models/review.js';
 // joi checkers
 import { checkCampground, checkReview } from '../utils/checkSchema.js';
 const campgroundsRouter = express.Router();
@@ -43,6 +42,7 @@ campgroundsRouter.get(
 	asyncWrapper(async (req, res) => {
 		const { id } = req.params;
 		const campground = await Campground.findById(id).populate('reviews');
+		console.log(campground);
 		res.render('campgrounds/show', {
 			campground,
 			messages: req.flash('success'),

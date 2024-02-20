@@ -45,7 +45,7 @@ app.get('/', (req, res) => {
 	res.render('home');
 });
 
-// router per campgrounds
+// router
 app.use('/campgrounds', campgroundsRouter);
 app.use('/campgrounds/:id/reviews', reviewsRouter);
 app.all('*', (req, res, next) => {

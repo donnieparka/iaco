@@ -1,5 +1,5 @@
 import express from 'express';
-const reviewsRouter = express.Router();
+const reviewsRouter = express.Router({ mergeParams: true });
 // models
 import Campground from '../models/campground.js';
 import Review from '../models/review.js';
@@ -23,7 +23,7 @@ reviewsRouter.post(
 
 // eliminazione review
 reviewsRouter.delete(
-	':revid',
+	'/:revid',
 	asyncWrapper(async (req, res) => {
 		await Campground.findByIdAndUpdate(req.params.id, {
 			$pull: { reviews: req.params.revid },
