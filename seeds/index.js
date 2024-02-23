@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
-const cities = require('./cities');
-const { places, descriptors } = require('./seedHelpers');
-const Campground = require('../models/campground');
+import mongoose from 'mongoose';
+import cities from './cities.js'
+import { places, descriptors } from './seedHelpers.js';
+import Campground from '../models/campground.js';
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp-fake');
 
