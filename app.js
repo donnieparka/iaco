@@ -11,6 +11,7 @@ import methodMiddleware from "./utils/methodMiddleware.js";
 // import dei router
 import campgroundsRouter from "./routes/campgrounds.js";
 import reviewsRouter from "./routes/reviews.js";
+import userRouter from "./routes/user.js";
 // Connette al database MongoDB
 mongoose.connect("mongodb://localhost:27017/yelp-camp-fake");
 
@@ -56,6 +57,7 @@ app.get("/", (req, res) => {
 // router
 app.use("/campgrounds", campgroundsRouter);
 app.use("/campgrounds/:id/reviews", reviewsRouter);
+app.use("/user", userRouter);
 app.all("*", (req, res, next) => {
   const err = new ExpressError("qua non c`è un cazzo", 404);
   next(err);
