@@ -1,0 +1,5 @@
+<% layout('layouts/boilerplate')%>
+<h1><%= loggedUser.user %></h1>
+<form action="/user?_method=PATCH" method="post">
+    <button>log out</button>
+</form>
