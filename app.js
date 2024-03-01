@@ -11,12 +11,15 @@ import methodMiddleware from "./utils/methodMiddleware.js";
 // import dei router
 import campgroundsRouter from "./routes/campgrounds.js";
 import reviewsRouter from "./routes/reviews.js";
-import userRouter from "./routes/user.js";
 // Connette al database MongoDB
 mongoose.connect("mongodb://localhost:27017/yelp-camp-fake");
 
-/* dichiarazione variabili */
 const db = mongoose.connection;
+db.on("error", console.error.bind(console, "connection error:"));
+db.once("open", () => {
+  console.log("Database connected");
+});
+
 const app = express();
 const sessionSetup = {
   secret: "dspoasdjfpaisj",
@@ -38,13 +41,9 @@ app.set("views", path.join(process.cwd(), "views"));
 // Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(methodMiddleware);
-app.use(express.static(path.join(process.cwd(), "public")));
+app.use(express.static("public"));
 app.use(session(sessionSetup));
 app.use(flash());
-app.use((req, res, next) => {
-  res.locals.success = req.flash("success");
-  next();
-});
 // Route per la pagina iniziale
 app.get("/", (req, res) => {
   res.render("home");
@@ -53,7 +52,6 @@ app.get("/", (req, res) => {
 // router
 app.use("/campgrounds", campgroundsRouter);
 app.use("/campgrounds/:id/reviews", reviewsRouter);
-app.use("/user", userRouter);
 app.all("*", (req, res, next) => {
   const err = new ExpressError("qua non c`è un cazzo", 404);
   next(err);
