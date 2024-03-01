@@ -6,7 +6,9 @@ import ejsMate from "ejs-mate";
 import flash from "connect-flash";
 import session from "express-session";
 // utils
+import asyncWrapper from "./utils/asyncWrapper.js";
 import ExpressError from "./utils/ExpressError.js";
+import { checkCampground, checkReview } from "./utils/checkSchema.js";
 import methodMiddleware from "./utils/methodMiddleware.js";
 // import dei router
 import campgroundsRouter from "./routes/campgrounds.js";
@@ -21,17 +23,6 @@ db.once("open", () => {
 });
 
 const app = express();
-const sessionSetup = {
-  secret: "dspoasdjfpaisj",
-  resave: false,
-  saveUninitialized: false,
-};
-
-/* connessione a mongodb */
-db.on("error", console.error.bind(console, "connection error:"));
-db.once("open", () => {
-  console.log("Database connected");
-});
 
 // Configurazione dell'app Express
 app.engine("ejs", ejsMate);
