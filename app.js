@@ -6,9 +6,7 @@ import ejsMate from "ejs-mate";
 import flash from "connect-flash";
 import session from "express-session";
 // utils
-import asyncWrapper from "./utils/asyncWrapper.js";
 import ExpressError from "./utils/ExpressError.js";
-import { checkCampground, checkReview } from "./utils/checkSchema.js";
 import methodMiddleware from "./utils/methodMiddleware.js";
 // import dei router
 import campgroundsRouter from "./routes/campgrounds.js";
@@ -23,6 +21,15 @@ db.once("open", () => {
 });
 
 const app = express();
+const sessionSetup = {
+  secret: "segreto di merda",
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    httpOnly: true,
+    expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+  },
+};
 
 // Configurazione dell'app Express
 app.engine("ejs", ejsMate);
@@ -35,6 +42,11 @@ app.use(methodMiddleware);
 app.use(express.static("public"));
 app.use(session(sessionSetup));
 app.use(flash());
+app.use((req, res, next) => {
+  res.locals.success = req.flash("success");
+  res.locals.error = req.flash("error");
+  next();
+});
 // Route per la pagina iniziale
 app.get("/", (req, res) => {
   res.render("home");
