@@ -34,12 +34,9 @@ userRouter.post(
   "/login",
   asyncWrapper(async (req, res) => {
     const { user, password } = req.body;
-    const loggingUser = await User.findOne({ user });
-    if (
-      loggingUser &&
-      (await bcrypt.compare(password, loggingUser.password)) === true
-    ) {
-      req.session.user_id = loggingUser._id;
+    const foundUser = User.loggerFunc(user, password);
+    if (foundUser) {
+      req.session.user_id = foundUser._id;
       return res.redirect("/user/show");
     } else {
       return res.redirect("/user/login");
