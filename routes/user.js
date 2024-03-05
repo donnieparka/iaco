@@ -1,6 +1,7 @@
 import express from "express";
 import asyncWrapper from "../utils/asyncWrapper.js";
 import User from "../models/user.js";
+import passport from "passport";
 const usersRouter = express.Router();
 
 usersRouter.get("/register", (req, res) => {
@@ -24,5 +25,24 @@ usersRouter.post(
       res.redirect("register");
     }
   })
+);
+
+usersRouter.get("/login", (req, res) => {
+  res.render("user/login");
+});
+
+usersRouter.post(
+  "/login",
+  passport.authenticate("local", {
+    failureFlash: true,
+    failureRedirect: "/user/login",
+  }),
+  (req, res) => {
+    req.flash(
+      "success",
+      "ciao coglione vai ancora a dormire in tenda come i barboni?"
+    );
+    res.redirect("/campgrounds");
+  }
 );
 export default usersRouter;
