@@ -12,11 +12,11 @@ const LocalStrategy = passportLocal.Strategy;
 import ExpressError from "./utils/ExpressError.js";
 import methodMiddleware from "./utils/methodMiddleware.js";
 // import dei router
-import usersRouter from "./routes/users.js";
+import usersRouter from "./routes/user.js";
 import campgroundsRouter from "./routes/campgrounds.js";
 import reviewsRouter from "./routes/reviews.js";
 /* modelli mongoose */
-import User from "./models/users.js";
+import User from "./models/user.js";
 // Connette al database MongoDB
 mongoose.connect("mongodb://localhost:27017/yelp-camp-fake");
 
@@ -68,7 +68,7 @@ app.get("/", (req, res) => {
 });
 
 // router
-app.use("/users", usersRouter);
+app.use("/user", usersRouter);
 app.use("/campgrounds", campgroundsRouter);
 app.use("/campgrounds/:id/reviews", reviewsRouter);
 app.all("*", (req, res, next) => {
