@@ -45,4 +45,18 @@ usersRouter.post(
     res.redirect("/campgrounds");
   }
 );
+
+usersRouter.get("/logout", (req, res, next) => {
+  req.logout(function (err) {
+    if (err) {
+      return next(err);
+    }
+    req.flash(
+      "success",
+      "speriamo tu abbia comprato qualcosa stavolta taccagno di merda"
+    );
+    res.redirect("/campgrounds");
+  });
+});
+
 export default usersRouter;
