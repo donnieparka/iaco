@@ -1,5 +1,6 @@
 import express from "express";
 import asyncWrapper from "../utils/asyncWrapper.js";
+import authencication from "../utils/isLoggedMiddleware.js";
 // models
 import Campground from "../models/campground.js";
 // joi checkers
@@ -19,6 +20,7 @@ campgroundsRouter.get(
 // prettier-ignore
 campgroundsRouter.get(
 	'/new',
+  authencication,
 	(req, res) => {
 		res.render('campgrounds/new'); // Renderizza il form per aggiungere un nuovo campeggio
 	},
@@ -27,6 +29,7 @@ campgroundsRouter.get(
 // Route per gestire l'aggiunta di un nuovo campeggio
 campgroundsRouter.post(
   "/",
+  authencication,
   checkCampground,
   asyncWrapper(async (req, res) => {
     const campground = new Campground(req.body.campground);
@@ -53,6 +56,7 @@ campgroundsRouter.get(
 // Route per visualizzare il form per modificare un campeggio esistente
 campgroundsRouter.get(
   "/:id/edit",
+  authencication,
   asyncWrapper(async (req, res) => {
     const campground = await Campground.findById(req.params.id);
     if (!campground) {
@@ -69,6 +73,7 @@ campgroundsRouter.get(
 // Route per gestire la modifica di un campeggio esistente
 campgroundsRouter.put(
   "/:id",
+  authencication,
   checkCampground,
   asyncWrapper(async (req, res) => {
     const { id } = req.params;
@@ -83,6 +88,7 @@ campgroundsRouter.put(
 // Route per gestire l'eliminazione di un campeggio
 campgroundsRouter.delete(
   "/:id",
+  authencication,
   asyncWrapper(async (req, res) => {
     const { id } = req.params;
     await Campground.findByIdAndDelete(id);
