@@ -15,11 +15,14 @@ usersRouter.post(
       const { username, password, email } = req.body;
       const user = new User({ username, email });
       const newUser = await User.register(user, password);
-      req.flash(
-        "success",
-        "cazzo complimenti imbecille finalmente sei riuscito a registrarti, pensavo non ce l'avresti mai fatta"
-      );
-      res.redirect("/campgrounds");
+      req.login(newUser, (err) => {
+        if (err) return next(err);
+        req.flash(
+          "success",
+          "cazzo complimenti imbecille finalmente sei riuscito a registrarti, pensavo non ce l'avresti mai fatta"
+        );
+        res.redirect("/campgrounds");
+      });
     } catch (error) {
       req.flash("error", error.message);
       res.redirect("register");
