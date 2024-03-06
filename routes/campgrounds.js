@@ -33,6 +33,7 @@ campgroundsRouter.post(
   checkCampground,
   asyncWrapper(async (req, res) => {
     const campground = new Campground(req.body.campground);
+    campground.author = req.user._id;
     await campground.save();
     req.flash("success", "campgroud Added!!");
     res.redirect(`/campgrounds/${campground._id}`);

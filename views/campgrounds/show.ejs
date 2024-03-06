@@ -9,9 +9,12 @@
       </div>
       <ul class="list-group list-group-flush">
         <li class="list-group-item text-muted"><%= campground.location%></li>
-        <li class="list-group-item"><%=campground.author.username%></li>
+        <li class="list-group-item">
+          Camp by: <strong><%=campground.author.username%></strong>
+        </li>
         <li class="list-group-item">$<%= campground.price%>/night</li>
       </ul>
+      <% if (user && campground.author.equals(user._id)) {%>
       <div class="card-body">
         <a
           class="card-link btn btn-info"
@@ -26,6 +29,7 @@
           <button class="btn btn-danger">Delete</button>
         </form>
       </div>
+      <% } %>
       <div class="card-footer text-muted">2 days ago</div>
     </div>
   </div>

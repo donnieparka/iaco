@@ -20,7 +20,7 @@ usersRouter.post(
         if (err) return next(err);
         req.flash(
           "success",
-          "cazzo complimenti imbecille finalmente sei riuscito a registrarti, pensavo non ce l'avresti mai fatta"
+          `cazzo complimenti ${user.username} di merda finalmente sei riuscitu a registrarti, pensavo non ce l'avresti mai fatta`
         );
         res.redirect("/campgrounds");
       });
