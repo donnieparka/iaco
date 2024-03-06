@@ -1,4 +1,5 @@
 import express from "express";
+import storeReturnTo from "../utils/storeReturnTo.js";
 import asyncWrapper from "../utils/asyncWrapper.js";
 import User from "../models/user.js";
 import passport from "passport";
@@ -36,16 +37,18 @@ usersRouter.get("/login", (req, res) => {
 
 usersRouter.post(
   "/login",
+  storeReturnTo,
   passport.authenticate("local", {
     failureFlash: true,
     failureRedirect: "/user/login",
   }),
   (req, res) => {
+    const returnUrl = res.locals.returnTo || "/campgrounds";
     req.flash(
       "success",
       "ciao coglione vai ancora a dormire in tenda come i barboni?"
     );
-    res.redirect("/campgrounds");
+    res.redirect(returnUrl);
   }
 );
 
