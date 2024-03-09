@@ -5,6 +5,7 @@ import authentication from "../utils/isLoggedMiddleware.js";
 import Campground from "../models/campground.js";
 // joi checkers
 import { checkCampground } from "../utils/checkSchema.js";
+import authorization from "../utils/isOwner.js";
 const campgroundsRouter = express.Router();
 
 // Route per visualizzare tutti i campeggi
@@ -60,6 +61,7 @@ campgroundsRouter.get(
 campgroundsRouter.get(
   "/:id/edit",
   authentication,
+  authorization,
   asyncWrapper(async (req, res) => {
     const campground = await Campground.findById(req.params.id);
     if (!campground) {
@@ -77,10 +79,10 @@ campgroundsRouter.get(
 campgroundsRouter.put(
   "/:id",
   authentication,
+  authorization,
   checkCampground,
   asyncWrapper(async (req, res) => {
-    const { id } = req.params;
-    const campground = await Campground.findByIdAndUpdate(id, {
+    const editCamp = await Campground.findByIdAndUpdate(req.query.id, {
       ...req.body.campground,
     });
     req.flash("success", "campground modificato!!");
@@ -92,6 +94,7 @@ campgroundsRouter.put(
 campgroundsRouter.delete(
   "/:id",
   authentication,
+  authorization,
   asyncWrapper(async (req, res) => {
     const { id } = req.params;
     await Campground.findByIdAndDelete(id);

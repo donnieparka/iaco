@@ -34,6 +34,8 @@
     </div>
   </div>
   <div class="col-6">
+    <% if(user) { %>
+    <h2>Lascia una recensione cristo santo 2 minuti sono</h2>
     <form
       class="validate"
       name="review"
@@ -42,10 +44,9 @@
       novalidate
     >
       <div class="mb-3">
-        <label for="review">review</label>
         <!-- prettier-ignore -->
-        <textarea class="form-control" name="review[body]" id="body" cols="10" rows="3" required></textarea>
-        <label for="customRange1" class="form-label">Example range</label>
+        <textarea class="form-control" name="review[body]" id="body" cols="10" rows="3" required placeholder="recensione"></textarea>
+        <label for="customRange1" class="form-label mt-3">voto da 1 a 5</label>
         <input
           name="review[rating]"
           type="range"
@@ -55,11 +56,13 @@
           id="customRange1"
           oninput="updateValue(this.value)"
         />
-        <span class="showRating">3</span>
+        <span class="showRating">voto attuale: <strong>3</strong></span>
         <br />
         <button class="btn btn-success">Submit</button>
       </div>
     </form>
+    <% } %>
+    <!-- prettier-ignore -->
     <% for (const review of campground.reviews) { %>
     <div class="card mb-3">
       <div class="card-body">
