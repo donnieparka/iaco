@@ -1,11 +1,10 @@
 import express from "express";
 import asyncWrapper from "../utils/asyncWrapper.js";
-import authentication from "../utils/isLoggedMiddleware.js";
 // models
-import Campground from "../models/campground.js";
+import { Campground } from "../mongooseModels.js";
 // joi checkers
-import { checkCampground } from "../utils/checkSchema.js";
-import authorization from "../utils/isOwner.js";
+import { checkCampground } from "../utils/joiValidation.js";
+import { isLogged, isCampgoundOwner } from "../utils/authMiddleware.js";
 const campgroundsRouter = express.Router();
 
 // Route per visualizzare tutti i campeggi
@@ -21,7 +20,7 @@ campgroundsRouter.get(
 // prettier-ignore
 campgroundsRouter.get(
 	'/new',
-  authentication,
+  isLogged,
 	(req, res) => {
 		res.render('campgrounds/new'); // Renderizza il form per aggiungere un nuovo campeggio
 	},
@@ -30,7 +29,7 @@ campgroundsRouter.get(
 // Route per gestire l'aggiunta di un nuovo campeggio
 campgroundsRouter.post(
   "/",
-  authentication,
+  isLogged,
   checkCampground,
   asyncWrapper(async (req, res) => {
     const campground = new Campground(req.body.campground);
@@ -47,7 +46,7 @@ campgroundsRouter.get(
   asyncWrapper(async (req, res) => {
     const { id } = req.params;
     const campground = await Campground.findById(id)
-      .populate("reviews")
+      .populate({ path: "reviews", populate: { path: "author" } })
       .populate("author");
     if (!campground) {
       req.flash("error", "non esiste questo campground, idiota");
@@ -60,8 +59,8 @@ campgroundsRouter.get(
 // Route per visualizzare il form per modificare un campeggio esistente
 campgroundsRouter.get(
   "/:id/edit",
-  authentication,
-  authorization,
+  isLogged,
+  isCampgoundOwner,
   asyncWrapper(async (req, res) => {
     const campground = await Campground.findById(req.params.id);
     if (!campground) {
@@ -78,23 +77,25 @@ campgroundsRouter.get(
 // Route per gestire la modifica di un campeggio esistente
 campgroundsRouter.put(
   "/:id",
-  authentication,
-  authorization,
+  isLogged,
+  isCampgoundOwner,
   checkCampground,
   asyncWrapper(async (req, res) => {
-    const editCamp = await Campground.findByIdAndUpdate(req.query.id, {
-      ...req.body.campground,
+    const { id } = req.params;
+    const editCamp = await Campground.findById(id);
+    await Campground.findByIdAndUpdate(id, {
+      ...req.body,
     });
     req.flash("success", "campground modificato!!");
-    res.redirect(`/campgrounds/${campground._id}`);
+    res.redirect(`/campgrounds/${editCamp._id}`);
   })
 );
 
 // Route per gestire l'eliminazione di un campeggio
 campgroundsRouter.delete(
   "/:id",
-  authentication,
-  authorization,
+  isLogged,
+  isCampgoundOwner,
   asyncWrapper(async (req, res) => {
     const { id } = req.params;
     await Campground.findByIdAndDelete(id);

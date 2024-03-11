@@ -16,7 +16,7 @@ import usersRouter from "./routes/user.js";
 import campgroundsRouter from "./routes/campgrounds.js";
 import reviewsRouter from "./routes/reviews.js";
 /* modelli mongoose */
-import User from "./models/user.js";
+import { User } from "./mongooseModels.js";
 // Connette al database MongoDB
 mongoose.connect("mongodb://localhost:27017/yelp-camp-fake");
 
