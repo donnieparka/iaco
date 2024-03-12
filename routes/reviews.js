@@ -3,7 +3,7 @@ const reviewsRouter = express.Router({ mergeParams: true });
 // models
 import { Campground, Review } from "../mongooseModels.js";
 // utils
-import asyncWrapper from "../utils/asyncWrapper.js";
+import { asyncWrapper } from "../utils/middlewares.js";
 import { checkReview } from "../utils/joiValidation.js";
 import { isLogged, isReviewOwner } from "../utils/authMiddleware.js";
 // aggiunta review al campeggio

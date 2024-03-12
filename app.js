@@ -10,7 +10,7 @@ import passportLocal from "passport-local";
 const LocalStrategy = passportLocal.Strategy;
 // utils
 import ExpressError from "./utils/ExpressError.js";
-import methodMiddleware from "./utils/methodMiddleware.js";
+import { methodMiddleware } from "./utils/middlewares.js";
 // import dei router
 import usersRouter from "./routes/user.js";
 import campgroundsRouter from "./routes/campgrounds.js";

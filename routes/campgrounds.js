@@ -1,5 +1,5 @@
 import express from "express";
-import asyncWrapper from "../utils/asyncWrapper.js";
+import { asyncWrapper } from "../utils/middlewares.js";
 // models
 import { Campground } from "../mongooseModels.js";
 // joi checkers

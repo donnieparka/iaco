@@ -1,6 +1,5 @@
 import express from "express";
-import storeReturnTo from "../utils/storeReturnTo.js";
-import asyncWrapper from "../utils/asyncWrapper.js";
+import { storeReturnTo, asyncWrapper } from "../utils/middlewares.js";
 import { User } from "../mongooseModels.js";
 import passport from "passport";
 const usersRouter = express.Router();
