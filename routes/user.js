@@ -1,38 +1,19 @@
 import express from "express";
 import { storeReturnTo, asyncWrapper } from "../utils/middlewares.js";
-import { User } from "../mongooseModels.js";
 import passport from "passport";
+import {
+  logInUser,
+  registerUser,
+  renderLogInForm,
+  renderRegisterForm,
+} from "../controllers/userControllers.js";
 const usersRouter = express.Router();
 
-usersRouter.get("/register", (req, res) => {
-  res.render("user/register");
-});
+usersRouter.get("/register", renderRegisterForm);
 
-usersRouter.post(
-  "/register",
-  asyncWrapper(async (req, res) => {
-    try {
-      const { username, password, email } = req.body;
-      const user = new User({ username, email });
-      const newUser = await User.register(user, password);
-      req.login(newUser, (err) => {
-        if (err) return next(err);
-        req.flash(
-          "success",
-          `cazzo complimenti ${user.username} di merda finalmente sei riuscitu a registrarti, pensavo non ce l'avresti mai fatta`
-        );
-        res.redirect("/campgrounds");
-      });
-    } catch (error) {
-      req.flash("error", error.message);
-      res.redirect("register");
-    }
-  })
-);
+usersRouter.post("/register", asyncWrapper(registerUser));
 
-usersRouter.get("/login", (req, res) => {
-  res.render("user/login");
-});
+usersRouter.get("/login", renderLogInForm);
 
 usersRouter.post(
   "/login",
@@ -41,14 +22,7 @@ usersRouter.post(
     failureFlash: true,
     failureRedirect: "/user/login",
   }),
-  (req, res) => {
-    const returnUrl = res.locals.returnTo || "/campgrounds";
-    req.flash(
-      "success",
-      "ciao coglione vai ancora a dormire in tenda come i barboni?"
-    );
-    res.redirect(returnUrl);
-  }
+  logInUser
 );
 
 usersRouter.get("/logout", (req, res, next) => {
