@@ -38,7 +38,7 @@
         <div class="input-group">
           <span class="input-group-text" id="price-label">$</span>
           <input
-            type="text"
+            type="number"
             class="form-control"
             id="price"
             placeholder="0.00"
@@ -66,17 +66,3 @@
     <a href="/campgrounds">All Campgrounds</a>
   </div>
 </div>
-
-<script>
-  (() => {
-    "use strict";
-    const form = document.querySelector(".validate");
-    // prettier-ignore
-    form.addEventListener('submit', (event) => {
-				if (!form.checkValidity()) {
-					event.preventDefault();
-				}
-				form.classList.add('was-validated');
-			})
-  })();
-</script>
