@@ -36,4 +36,23 @@ const logInUser = (req, res) => {
   res.redirect(returnUrl);
 };
 
-export { renderRegisterForm, registerUser, renderLogInForm, logInUser };
+const logOutUser = (req, res, next) => {
+  req.logout(function (err) {
+    if (err) {
+      return next(err);
+    }
+    req.flash(
+      "success",
+      "speriamo tu abbia comprato qualcosa stavolta taccagno di merda"
+    );
+    res.redirect("/campgrounds");
+  });
+};
+
+export {
+  renderRegisterForm,
+  registerUser,
+  renderLogInForm,
+  logInUser,
+  logOutUser,
+};

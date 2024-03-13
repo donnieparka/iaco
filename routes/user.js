@@ -1,41 +1,30 @@
-import express from "express";
-import { storeReturnTo, asyncWrapper } from "../utils/middlewares.js";
-import passport from "passport";
+import express from 'express';
+import { storeReturnTo, asyncWrapper } from '../utils/middlewares.js';
+import passport from 'passport';
 import {
-  logInUser,
-  registerUser,
-  renderLogInForm,
-  renderRegisterForm,
-} from "../controllers/userControllers.js";
+	logInUser,
+	logOutUser,
+	registerUser,
+	renderLogInForm,
+	renderRegisterForm,
+} from '../controllers/userControllers.js';
 const usersRouter = express.Router();
 
-usersRouter.get("/register", renderRegisterForm);
+// prettier-ignore
+usersRouter.route("/register")
+  .get(renderRegisterForm)
+  .post(asyncWrapper(registerUser));
 
-usersRouter.post("/register", asyncWrapper(registerUser));
+// prettier-ignore
+usersRouter.route("/login")
+  .get(renderLogInForm)
+  .post(storeReturnTo,passport.authenticate("local", {
+      failureFlash: true,
+      failureRedirect: "/user/login",
+    }),
+    logInUser
+  );
 
-usersRouter.get("/login", renderLogInForm);
-
-usersRouter.post(
-  "/login",
-  storeReturnTo,
-  passport.authenticate("local", {
-    failureFlash: true,
-    failureRedirect: "/user/login",
-  }),
-  logInUser
-);
-
-usersRouter.get("/logout", (req, res, next) => {
-  req.logout(function (err) {
-    if (err) {
-      return next(err);
-    }
-    req.flash(
-      "success",
-      "speriamo tu abbia comprato qualcosa stavolta taccagno di merda"
-    );
-    res.redirect("/campgrounds");
-  });
-});
+usersRouter.get('/logout', logOutUser);
 
 export default usersRouter;
