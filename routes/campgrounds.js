@@ -1,4 +1,5 @@
 import express from 'express';
+import multer from 'multer';
 import { asyncWrapper } from '../utils/middlewares.js';
 // joi checkers
 import { checkCampground } from '../utils/joiValidation.js';
@@ -14,7 +15,7 @@ import {
 } from '../controllers/campControllers.js';
 import { isLogged, isCampgoundOwner } from '../utils/authMiddleware.js';
 const campgroundsRouter = express.Router();
-
+const upload = multer({ dest: 'uploads/' });
 // Route per visualizzare tutti i campeggi
 campgroundsRouter
 	.route('/')
