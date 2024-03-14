@@ -14,14 +14,15 @@ import {
 	renderNewCampForm,
 } from '../controllers/campControllers.js';
 import { isLogged, isCampgoundOwner } from '../utils/authMiddleware.js';
+import { storage } from '../cloudinary/index.js';
 const campgroundsRouter = express.Router();
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({ storage });
 // Route per visualizzare tutti i campeggi
 campgroundsRouter
 	.route('/')
 	.get(asyncWrapper(renderIndex))
 	// Route per gestire l'aggiunta di un nuovo campeggio
-	.post(isLogged, checkCampground, asyncWrapper(addCampFromUserForm));
+	.post(isLogged, upload.array('image'), checkCampground, asyncWrapper(addCampFromUserForm));
 
 // Route per mostrare il form per aggiungere un nuovo campeggio
 campgroundsRouter.route('/new').get(isLogged, renderNewCampForm);

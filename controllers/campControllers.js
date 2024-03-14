@@ -1,5 +1,4 @@
 import { Campground } from '../mongooseModels.js';
-import { methodMiddleware } from '../utils/middlewares.js';
 const renderIndex = async (req, res) => {
 	const campgrounds = await Campground.find({});
 	res.render('campgrounds/index', { campgrounds });
@@ -10,7 +9,8 @@ const renderNewCampForm = (req, res) => {
 };
 
 const addCampFromUserForm = async (req, res) => {
-	const campground = new Campground(req.body.campground);
+	const campground = new Campground(req.body);
+	campground.images = req.files.map((file) => ({ url: file.path, filename: file.filename }));
 	campground.author = req.user._id;
 	await campground.save();
 	req.flash('success', 'campgroud Added!!');
