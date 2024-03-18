@@ -34,7 +34,13 @@ campgroundsRouter
 	// Route per visualizzare i dettagli di un campeggio specifico
 	.get(asyncWrapper(campDetailsPage))
 	// Route per gestire la modifica di un campeggio esistente
-	.put(isLogged, isCampgoundOwner, checkCampground, asyncWrapper(editCampFromUserForm))
+	.put(
+		isLogged,
+		isCampgoundOwner,
+		upload.array('image'),
+		checkCampground,
+		asyncWrapper(editCampFromUserForm)
+	)
 	// Route per gestire l'eliminazione di un campeggio
 	.delete(isLogged, isCampgoundOwner, asyncWrapper(deleteCampFromUserForm));
 

@@ -40,8 +40,9 @@ const renderEditCampForm = async (req, res) => {
 
 const editCampFromUserForm = async (req, res) => {
 	const { id } = req.params;
-	const editCamp = await Campground.findById(id);
-	await Campground.findByIdAndUpdate(id, { ...req.body });
+	const editCamp = await Campground.findByIdAndUpdate(id, { ...req.body });
+	editCamp.images = req.files.map((file) => ({ url: file.path, filename: file.filename }));
+	await editCamp.save();
 	req.flash('success', 'campground modificato!!');
 	res.redirect(`/campgrounds/${editCamp._id}`);
 };
