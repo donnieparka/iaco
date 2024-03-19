@@ -7,6 +7,7 @@ const campValidationSchema = joi.object({
 	// image: joi.string().required(),
 	price: joi.number().required().min(0),
 	description: joi.string().required(),
+	deleteImages: joi.array(),
 });
 
 const reviewValidationSchema = joi.object({

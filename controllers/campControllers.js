@@ -1,3 +1,4 @@
+import { cloudinary } from '../cloudinary/index.js';
 import { Campground } from '../mongooseModels.js';
 const renderIndex = async (req, res) => {
 	const campgrounds = await Campground.find({});
@@ -41,8 +42,15 @@ const renderEditCampForm = async (req, res) => {
 const editCampFromUserForm = async (req, res) => {
 	const { id } = req.params;
 	const editCamp = await Campground.findByIdAndUpdate(id, { ...req.body });
-	editCamp.images = req.files.map((file) => ({ url: file.path, filename: file.filename }));
+	const images = req.files.map((file) => ({ url: file.path, filename: file.filename }));
+	editCamp.images.push(...images);
 	await editCamp.save();
+	if (req.body.deleteImages.length) {
+		for (let filename of req.body.deleteImages) {
+			cloudinary.uploader.destroy(filename);
+		}
+		await editCamp.updateOne({ $pull: { images: { filename: { $in: req.body.deleteImages } } } });
+	}
 	req.flash('success', 'campground modificato!!');
 	res.redirect(`/campgrounds/${editCamp._id}`);
 };
