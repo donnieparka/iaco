@@ -16,15 +16,18 @@ const reviewSchema = mongoose.Schema({
 	},
 });
 
+const imageSchema = mongoose.Schema({
+	url: String,
+	filename: String,
+});
+
+imageSchema.virtual('thumbnail').get(function () {
+	return this.url.replace('/upload', '/upload/w_200');
+});
 const campgroundSchema = mongoose.Schema({
 	title: String,
-	images: [
-		{
-			url: String,
-			filename: String,
-		},
-	],
 	price: Number,
+	images: [imageSchema],
 	description: String,
 	location: String,
 	author: {

@@ -45,7 +45,7 @@ const editCampFromUserForm = async (req, res) => {
 	const images = req.files.map((file) => ({ url: file.path, filename: file.filename }));
 	editCamp.images.push(...images);
 	await editCamp.save();
-	if (req.body.deleteImages.length) {
+	if (req.body.deleteImages) {
 		for (let filename of req.body.deleteImages) {
 			cloudinary.uploader.destroy(filename);
 		}
