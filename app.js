@@ -1,5 +1,6 @@
 // Importa i moduli necessari
 import 'dotenv/config.js';
+import seedDB from './seeds/index.js';
 import express from 'express';
 import path from 'path';
 import mongoose from 'mongoose';
@@ -11,7 +12,7 @@ import passportLocal from 'passport-local';
 const LocalStrategy = passportLocal.Strategy;
 // utils
 import ExpressError from './utils/ExpressError.js';
-import { methodMiddleware } from './utils/middlewares.js';
+import { asyncWrapper, methodMiddleware } from './utils/middlewares.js';
 // import dei router
 import usersRouter from './routes/user.js';
 import campgroundsRouter from './routes/campgrounds.js';
@@ -73,6 +74,15 @@ app.get('/', (req, res) => {
 app.use('/user', usersRouter);
 app.use('/campgrounds', campgroundsRouter);
 app.use('/campgrounds/:id/reviews', reviewsRouter);
+
+app.get(
+	'/seed',
+	asyncWrapper(async (req, res) => {
+		await seedDB();
+		res.redirect('/campgrounds');
+	})
+);
+
 app.all('*', (req, res, next) => {
 	const err = new ExpressError('qua non c`è un cazzo', 404);
 	next(err);

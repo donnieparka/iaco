@@ -12,17 +12,22 @@ const renderNewCampForm = (req, res) => {
 };
 
 const addCampFromUserForm = async (req, res) => {
-	const { location } = req.body;
-	const apiToken = process.env.MAPBOX_TOKEN;
-	const geoData = await geoCoder.localize(apiToken, location);
-	const coordinates = geoCoder.coordinates(geoData);
-	res.send(coordinates);
-	// const campground = new Campground(req.body);
-	// campground.images = req.files.map((file) => ({ url: file.path, filename: file.filename }));
-	// campground.author = req.user._id;
-	// await campground.save();
-	// req.flash('success', 'campgroud Added!!');
-	// res.redirect(`/campgrounds/${campground._id}`);
+	try {
+		const { location } = req.body;
+		const apiToken = process.env.MAPBOX_TOKEN;
+		const coordinates = await geoCoder.localize(apiToken, location);
+		const campground = new Campground(req.body);
+		campground.geometry.type = 'Point';
+		campground.geometry.coordinates = coordinates;
+		campground.images = req.files.map((file) => ({ url: file.path, filename: file.filename }));
+		campground.author = req.user._id;
+		await campground.save();
+		req.flash('success', 'campgroud Added!!');
+		return res.redirect(`/campgrounds/${campground._id}`);
+	} catch (error) {
+		req.flash('error', 'eccoloooo il mongolo dislessico, riscrivi down di merda');
+		return res.redirect(`/campgrounds/new`);
+	}
 };
 
 const campDetailsPage = async (req, res) => {
