@@ -53,6 +53,10 @@ const campgroundSchema = mongoose.Schema({
 	],
 });
 
+campgroundSchema.virtual('properties.campLink').get(function(){
+	return '<h4></h4>'
+
+})
 const userSchema = new mongoose.Schema({
 	username: {
 		type: String,
