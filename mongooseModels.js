@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import passportLocalMongoose from 'passport-local-mongoose';
-
+const opts = { toJSON: { virtuals: true } };
 const reviewSchema = mongoose.Schema({
 	author: {
 		type: mongoose.Schema.Types.ObjectId,
@@ -24,39 +24,41 @@ const imageSchema = mongoose.Schema({
 imageSchema.virtual('thumbnail').get(function () {
 	return this.url.replace('/upload', '/upload/w_200');
 });
-const campgroundSchema = mongoose.Schema({
-	title: String,
-	price: Number,
-	images: [imageSchema],
-	geometry: {
-		type: {
-			type: String,
-			enum: ['Point'],
-			required: true,
+const campgroundSchema = mongoose.Schema(
+	{
+		title: String,
+		price: Number,
+		images: [imageSchema],
+		geometry: {
+			type: {
+				type: String,
+				enum: ['Point'],
+				required: true,
+			},
+			coordinates: {
+				type: [Number],
+				required: true,
+			},
 		},
-		coordinates: {
-			type: [Number],
-			required: true,
-		},
-	},
-	description: String,
-	location: String,
-	author: {
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'User',
-	},
-	reviews: [
-		{
+		description: String,
+		location: String,
+		author: {
 			type: mongoose.Schema.Types.ObjectId,
-			ref: 'Review',
+			ref: 'User',
 		},
-	],
+		reviews: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'Review',
+			},
+		],
+	},
+	opts
+);
+
+campgroundSchema.virtual('properties.campLink').get(function () {
+	return `<a href= /campgrounds/${this._id}>${this.title}</a>`;
 });
-
-campgroundSchema.virtual('properties.campLink').get(function(){
-	return '<h4></h4>'
-
-})
 const userSchema = new mongoose.Schema({
 	username: {
 		type: String,
