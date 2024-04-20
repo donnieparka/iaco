@@ -1,18 +1,39 @@
 import joi from 'joi';
 import ExpressError from './ExpressError.js';
+import sanitizeHtml from 'sanitize-html';
 
-const campValidationSchema = joi.object({
-	title: joi.string().required(),
-	location: joi.string().required(),
-	// image: joi.string().required(),
-	price: joi.number().required().min(0),
-	description: joi.string().required(),
-	deleteImages: joi.array(),
+const extension = (joi) => ({
+	type: 'string',
+	base: joi.string(),
+	messages: {
+		'string.escapeHTML': `{{#label}} non deve avere html, chi cazzo credi di fottere`,
+	},
+	rules: {
+		escapeHTML: {
+			validate(value, helpers) {
+				const clean = sanitizeHtml(value, {
+					allowedTags: [],
+					allowedAttributes: {},
+				});
+				if (clean !== value) return helpers.error('string.escapeHTML', { value });
+				return clean;
+			},
+		},
+	},
+});
+const Joi = joi.extend(extension);
+const campValidationSchema = Joi.object({
+	title: Joi.string().required().escapeHTML(),
+	location: Joi.string().required().escapeHTML(),
+	// image: Joi.string().required(),
+	price: Joi.number().required().min(0),
+	description: Joi.string().required().escapeHTML(),
+	deleteImages: Joi.array(),
 });
 
-const reviewValidationSchema = joi.object({
-	body: joi.string().required(),
-	rating: joi.number().required().min(1).max(5),
+const reviewValidationSchema = Joi.object({
+	body: Joi.string().required().escapeHTML(),
+	rating: Joi.number().required().min(1).max(5),
 });
 
 function checkCampground(req, res, next) {
