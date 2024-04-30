@@ -15,8 +15,8 @@ const seedDB = async () => {
         const camp = new Campground({
 			//YOUR USER ID
             location: `${cities[random1000].city}, ${cities[random1000].state}`,
-			// author: '65e85112bcf372d2643f013b',
-			author: '6614f6cd6221f6d6ddc9f4b3',
+			// author: '65e85112bcf372d2643f013b', 
+			author: '6614f6cd6221f6d6ddc9f4b3', //desktop
             title: `${sample(descriptors)} ${sample(places)}`,
             description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam dolores vero perferendis laudantium, consequuntur voluptatibus nulla architecto, sit soluta esse iure sed labore ipsam a cum nihil atque molestiae deserunt!',
             price,
@@ -39,34 +39,6 @@ const seedDB = async () => {
             ]
         })
         await camp.save();
-	// for (let i = 0; i < 50; i++) {
-	// 	const random1000 = Math.floor(Math.random() * 1000);
-	// 	const price = Math.floor(Math.random() * 20) + 10;
-	// 	const coordinates = await geoCoder.localize(
-	// 		apiToken,
-	// 		`${cities[random1000].city} ${cities[random1000].state}`
-	// 	);
-	// 	coordinates.reverse();
-	// 	const camp = new Campground({
-	// 		location: `${cities[random1000].city}, ${cities[random1000].state}`,
-	// 		title: `${sample(descriptors)} ${sample(places)}`,
-	// 		geometry: {
-	// 			type: 'Point',
-	// 			coordinates: coordinates,
-	// 		},
-	// 		images: [
-	// 			{
-	// 				url: '',
-	// 				filename: 'b4vzw2dhewcoqe3b4fyu',
-	// 				_id: '65f9f35308955ee4ca51e1e0',
-	// 			},
-	// 		],
-
-	// 		description:
-	// 			'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam dolores vero perferendis laudantium, consequuntur voluptatibus nulla architecto, sit soluta esse iure sed labore ipsam a cum nihil atque molestiae deserunt!',
-	// 		price,
-	// 	});
-	// 	await camp.save();
 	}
 };
 
