@@ -46,10 +46,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodMiddleware);
 
 app.use(express.static('public'));
+const secret = process.env.SECRET;
 
 const store = MongoStore.create({
 	mongoUrl: dbUrl,
-	secret: 'segreto di merda',
+	secret,
 	touchAfter: 24 * 60 * 60,
 });
 store.on('error', function (e) {
@@ -59,7 +60,7 @@ store.on('error', function (e) {
 const sessionSetup = {
 	store,
 	name: 'session',
-	secret: 'segreto di merda',
+	secret,
 	resave: false,
 	saveUninitialized: true,
 	cookie: {
