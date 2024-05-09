@@ -5,6 +5,7 @@ import seedDB from './seeds/index.js';
 import express from 'express';
 import path from 'path';
 import mongoose from 'mongoose';
+import MongoStore from 'connect-mongo';
 import ejsMate from 'ejs-mate';
 import flash from 'connect-flash';
 import session from 'express-session';
@@ -20,9 +21,11 @@ import campgroundsRouter from './routes/campgrounds.js';
 import reviewsRouter from './routes/reviewsRouter.js';
 /* modelli mongoose */
 import { User } from './mongooseModels.js';
+import { name } from 'ejs';
 // Connette al database MongoDB
-const dbUrl = process.env.DB_URL;
-mongoose.connect('mongodb://localhost:27017/yelp-camp-fake');
+// const dbUrl = process.env.DB_URL;
+const dbUrl = 'mongodb://localhost:27017/yelp-camp-fake';
+mongoose.connect(dbUrl);
 // mongoose.connect(dbUrl);
 
 const db = mongoose.connection;
@@ -32,15 +35,6 @@ db.once('open', () => {
 });
 
 const app = express();
-const sessionSetup = {
-	secret: 'segreto di merda',
-	resave: false,
-	saveUninitialized: true,
-	cookie: {
-		httpOnly: true,
-		expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
-	},
-};
 
 // Configurazione dell'app Express
 app.engine('ejs', ejsMate);
@@ -53,6 +47,26 @@ app.use(methodMiddleware);
 
 app.use(express.static('public'));
 
+const store = MongoStore.create({
+	mongoUrl: dbUrl,
+	secret: 'segreto di merda',
+	touchAfter: 24 * 60 * 60,
+});
+store.on('error', function (e) {
+	console.log('ERRORE DI SALVATAGGIO SESSIONE', e);
+});
+
+const sessionSetup = {
+	store,
+	name: 'session',
+	secret: 'segreto di merda',
+	resave: false,
+	saveUninitialized: true,
+	cookie: {
+		httpOnly: true,
+		expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+	},
+};
 app.use(session(sessionSetup));
 
 app.use(passport.initialize());
