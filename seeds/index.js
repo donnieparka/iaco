@@ -1,7 +1,6 @@
 import cities from "./cities.js";
 import { places, descriptors } from "./seedHelpers.js";
 import { Campground } from "../mongooseModels.js";
-import { GeoCoder } from "../utils/mapBox.js";
 // const geoCoder = new GeoCoder();
 
 const sample = (array) => array[Math.floor(Math.random() * array.length)];
