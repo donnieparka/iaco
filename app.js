@@ -23,8 +23,8 @@ import reviewsRouter from './routes/reviewsRouter.js';
 import { User } from './mongooseModels.js';
 import { name } from 'ejs';
 // Connette al database MongoDB
-// const dbUrl = process.env.DB_URL;
-const dbUrl = 'mongodb://localhost:27017/yelp-camp-fake';
+// const dbUrl = ;
+const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yelp-camp-fake';
 mongoose.connect(dbUrl);
 // mongoose.connect(dbUrl);
 
