@@ -21,7 +21,7 @@ import campgroundsRouter from './routes/campgrounds.js';
 import reviewsRouter from './routes/reviewsRouter.js';
 /* modelli mongoose */
 import { User } from './mongooseModels.js';
-import { name } from 'ejs';
+
 // Connette al database MongoDB
 // const dbUrl = ;
 const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yelp-camp-fake';
@@ -50,8 +50,10 @@ const secret = process.env.SECRET;
 
 const store = MongoStore.create({
 	mongoUrl: dbUrl,
-	secret,
 	touchAfter: 24 * 60 * 60,
+	crypto: {
+		secret,
+	},
 });
 store.on('error', function (e) {
 	console.log('ERRORE DI SALVATAGGIO SESSIONE', e);
